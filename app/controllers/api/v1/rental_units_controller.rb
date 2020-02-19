@@ -20,8 +20,10 @@ class Api::V1::RentalUnitsController < ActionController::API
         description: rental_unit.description,
       }
     end
-
-    render json: { results: rental_units }.to_json, status: :ok
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    render json: {
+      data: rental_units
+    }.to_json, status: :ok
   end
 end
 
