@@ -1,24 +1,42 @@
 # README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+HOW THIS WORKS:
+Theres a controller
+  `app/controllers/api/v1/rental_units_controller.rb`
+  The controller handles how the data is returned when
+    a request is received
+  Whats happening:
+    1: getting all rentalunits
+    2: mapping over them, creating a JSON object for each
+      one that matches the JSON object that the frontend
+      expects
+    3: returning the JSON
 
-Things you may want to cover:
+There are migrations
+  db/migrations
+    Any time we change what a table looks like,
+      or add a new table, a migration is created
+    Gotta run `rake db:migrate` after each migration
+      file is created to ensure the schema is updated
 
-* Ruby version
+  somewhat related
+    there are seeds, used to populate the database with
+      data... for testing
+    after the seeds file, `db/seeds.rb` is updated,
+      you must run `rake db:seed`
 
-* System dependencies
+Theres the route
+  `config/routes.rb`
+  which tells us what function to call when a request is
+    received at a certain url, in our case we call the
+    index function from
+    `app/controllers/api/v1/rental_inits_controller.rb`
 
-* Configuration
+Theres the model file
+  `app/models/rental_unit.rb`
+  which I have yet to touch
 
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+Theres the schema file
+  `db/schema.rb`
+  which uses ActiveRecord (orm) to make the SQL queries
+    for us
