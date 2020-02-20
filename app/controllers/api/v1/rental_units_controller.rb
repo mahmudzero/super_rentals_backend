@@ -4,6 +4,40 @@ class Api::V1::RentalUnitsController < ActionController::API
     render jsonapi: RentalUnit.all
   end
 
+  def update_rental_unit
+    p "#{params[:id]}"
+    to_update_id = params[:id]
+    if (to_update_id.to_i != to_update_id.to_i.to_s)
+      res = {
+        data: [
+          id: 1,
+          type: 'error message',
+          attributes: {
+            error_message: 'error, invalid id, must be integer'
+          }
+        ], jsonapi: {
+          version: '1.0'
+        }
+      }
+      render json: res, status: :bad_request
+      return
+    end
+
+    res = {
+      data: [
+        id: 1,
+        type: 'response message',
+        attributes: {
+          message: 'put received'
+        }
+      ], jsonapi: {
+      version: '1.0'
+      }
+    }
+
+    render json: res
+  end
+
   def add_rental_unit
 
     reqBody = JSON.parse(request.body.read)
@@ -33,7 +67,7 @@ class Api::V1::RentalUnitsController < ActionController::API
         }
       ], jsonapi: {
       version: '1.0'
-    }
+      }
     }
     render json: res
   end
