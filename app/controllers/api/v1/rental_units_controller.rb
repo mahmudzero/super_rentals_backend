@@ -1,5 +1,12 @@
 class Api::V1::RentalUnitsController < ActionController::API
   def index
+    if (!checkRequestHeaders)
+      render json: {
+        response: 'Not Acceptable'
+      }.to_json, status: :not_acceptable
+      return
+    end
+
     rental_units = RentalUnit.all
     rental_units = rental_units.map do |rental_unit|
       {
@@ -20,6 +27,7 @@ class Api::V1::RentalUnitsController < ActionController::API
         description: rental_unit.description,
       }
     end
+
     response.headers['Access-Control-Allow-Origin'] = '*'
     response.headers['Content-Type'] = 'application/vnd.api+json'
     response.headers['Access-Control-Allow-Methods'] = 'GET, OPTIONS'
@@ -28,6 +36,14 @@ class Api::V1::RentalUnitsController < ActionController::API
       data: rental_units
     }.to_json, status: :ok
   end
+
+  def checkRequestHeaders
+    if (request.headers['Accept'] != 'application/vnd.api+json')
+      return false
+    end
+    return true
+  end
+
 end
 
 
