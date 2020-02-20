@@ -1,55 +1,26 @@
 class Api::V1::RentalUnitsController < ActionController::API
   def index
-    if (!checkRequestHeaders)
-      render json: {
-        response: 'Not Acceptable'
-      }.to_json, status: :not_acceptable
-      return
-    end
-
-    rental_units = RentalUnit.all
-    rental_units = rental_units.map do |rental_unit|
-      {
-        type: rental_unit.rental_type,
-        id: rental_unit.rental_id,
-        attributes: {
-          title: rental_unit.title,
-          owner: rental_unit.owner,
-          city: rental_unit.city,
-          location: {
-            lat: rental_unit.lat,
-            lng: rental_unit.lng
-          }
-        },
-        category: rental_unit.category,
-        bedrooms: rental_unit.bedrooms,
-        image: rental_unit.image,
-        description: rental_unit.description,
-      }
-    end
-
-    response.headers['Access-Control-Allow-Origin'] = '*'
-    response.headers['Content-Type'] = 'application/vnd.api+json'
-    response.headers['Access-Control-Allow-Methods'] = 'GET, OPTIONS'
-    response.headers['Access-Control-Allow-Headers'] = '*'
-    render json: {
-      data: {
-        type: 'rental units',
-        id: 'rental_units_00',
-        rental_units: rental_units
-      }
-    }.to_json, status: :ok
+    render jsonapi: RentalUnit.all
   end
-
-  def checkRequestHeaders
-    if (request.headers['Accept'] != 'application/vnd.api+json')
-      return false
-    end
-    return true
-  end
-
 end
 
+class SerializableRentalUnit < JSONAPI::Serializable::Resource
+  type 'rental_unit'
+
+  attributes :rental_type, :rental_id, :category, :bedrooms, :image, :description
+
+  attribute :innerattributes do
+    {
+      tite: @object.title,
+      owner: @object.owner,
+      city: @object.city,
+      location: {
+        lat: @object.lat,
+        lng: @object.lng
+      }
+    }
+  end
+end
 
 # {
 #   type: rentalUnit.type,
