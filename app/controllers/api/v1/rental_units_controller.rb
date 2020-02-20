@@ -21,6 +21,9 @@ class Api::V1::RentalUnitsController < ActionController::API
       }
     end
     response.headers['Access-Control-Allow-Origin'] = '*'
+    response.headers['Content-Type'] = 'application/vnd.api+json'
+    response.headers['Access-Control-Allow-Methods'] = 'GET, OPTIONS'
+    response.headers['Access-Control-Allow-Headers'] = '*'
     render json: {
       data: rental_units
     }.to_json, status: :ok
