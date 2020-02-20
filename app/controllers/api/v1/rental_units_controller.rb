@@ -33,7 +33,11 @@ class Api::V1::RentalUnitsController < ActionController::API
     response.headers['Access-Control-Allow-Methods'] = 'GET, OPTIONS'
     response.headers['Access-Control-Allow-Headers'] = '*'
     render json: {
-      data: rental_units
+      data: {
+        type: 'rental units',
+        id: 'rental_units_00',
+        rental_units: rental_units
+      }
     }.to_json, status: :ok
   end
 
