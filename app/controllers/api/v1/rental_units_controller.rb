@@ -1,13 +1,32 @@
 class Api::V1::RentalUnitsController < ActionController::API
   def index
-    # reading request body
     render jsonapi: RentalUnit.all
+  end
+
+  def get_by_id
+    to_update_id = params[:id]
+    if (to_update_id != to_update_id.to_i.to_s)
+      res = {
+        data: [
+          id: 1,
+          type: 'error message',
+          attributes: {
+            error_message: 'error, ivalid id, must be integer'
+          }
+        ], jsonapi: {
+          version: '1.0'
+        }
+      }
+      render json: res, status: :bad_request
+      return
+    end
+    render jsonapi: RentalUnit.find_by(id: params[:id])
   end
 
   def update_rental_unit
     p "#{params[:id]}"
     to_update_id = params[:id]
-    if (to_update_id.to_i != to_update_id.to_i.to_s)
+    if (to_update_id != to_update_id.to_i.to_s)
       res = {
         data: [
           id: 1,
@@ -81,7 +100,7 @@ class SerializableRentalUnit < JSONAPI::Serializable::Resource
 
   attribute :innerattributes do
     {
-      tite: @object.title,
+      title: @object.title,
       owner: @object.owner,
       city: @object.city,
       location: {
